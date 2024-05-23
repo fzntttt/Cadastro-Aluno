@@ -1,0 +1,95 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define FILENAME "amigos_alunos.csv"
+
+typedef struct {
+    char nome[50];
+    int idade;
+    float nota;
+} Aluno;
+
+void cadastrarAluno() {
+    Aluno aluno;
+    FILE *file = fopen(FILENAME, "a");
+
+    if (file == NULL) {
+        printf("Erro ao abrir o arquivo!\n");
+        return;
+    }
+
+    printf("Nome do aluno: ");
+    scanf(" %[^\n]s", aluno.nome);
+    printf("Idade do aluno: ");
+    scanf("%d", &aluno.idade);
+    printf("Nota do aluno: ");
+    scanf("%f", &aluno.nota);
+
+    fprintf(file, "%s;%d;%.2f\n", aluno.nome, aluno.idade, aluno.nota);
+
+    fclose(file);
+    printf("Aluno cadastrado com sucesso!\n");
+}
+
+void listarAlunos() {
+    Aluno aluno;
+    FILE *file = fopen(FILENAME, "r");
+
+    if (file == NULL) {
+        printf("Erro ao abrir o arquivo ou base de dados vazia!\n");
+        return;
+    }
+
+    printf("Lista de Alunos:\n");
+
+    while (fscanf(file, "%49[^;];%d;%f\n", aluno.nome, &aluno.idade, &aluno.nota) != EOF) {
+        printf("Nome: %s\n", aluno.nome);
+        printf("Idade: %d\n", aluno.idade);
+        printf("Nota: %.2f\n", aluno.nota);
+        printf("\n");
+    }
+
+    fclose(file);
+}
+
+void deletarBaseDeDados() {
+    if (remove(FILENAME) == 0) {
+        printf("Base de dados deletada com sucesso!\n");
+    } else {
+        printf("Erro ao deletar a base de dados!\n");
+    }
+}
+
+int main() {
+    int opcao;
+
+    do {
+        printf("\nMenu:\n");
+        printf("1 - Cadastrar Aluno\n");
+        printf("2 - Listar Alunos\n");
+        printf("3 - Deletar base de dados\n");
+        printf("4 - Sair\n");
+        printf("Escolha uma opcao: ");
+        scanf("%d", &opcao);
+
+        switch (opcao) {
+            case 1:
+                cadastrarAluno();
+                break;
+            case 2:
+                listarAlunos();
+                break;
+            case 3:
+                deletarBaseDeDados();
+                break;
+            case 4:
+                printf("Saindo...\n");
+                break;
+            default:
+                printf("Opcao invalida!\n");
+        }
+    } while (opcao != 4);
+
+    return 0;
+}
